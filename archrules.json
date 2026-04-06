@@ -1,0 +1,7 @@
+{
+  "forbid": [
+    { "from": "payments", "to": "ui", "reason": "payment logic must stay UI-free" },
+    { "from": "*", "to": "api", "reason": "api is the composition root — nothing may import it" },
+    { "from": "shared", "to": "*", "reason": "the shared kernel must stay dependency-free" }
+  ]
+}
