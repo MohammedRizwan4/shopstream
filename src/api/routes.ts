@@ -8,6 +8,7 @@ import type { CartService } from '../cart/cart.js';
 import type { OrderService } from '../orders/service.js';
 import type { PaymentService } from '../payments/service.js';
 import type { StockLedger } from '../inventory/stock.js';
+import type { WishlistService } from '../wishlist/service.js';
 
 export interface Services {
   users: UserService;
@@ -19,6 +20,7 @@ export interface Services {
   orders: OrderService;
   payments: PaymentService;
   stock: StockLedger;
+  wishlist: WishlistService;
 }
 
 export type Handler = (req: IncomingMessage, res: ServerResponse) => void;

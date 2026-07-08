@@ -13,6 +13,7 @@ import { OrderService } from '../orders/service.js';
 import { FakeGateway } from '../payments/gateway.js';
 import { PaymentService } from '../payments/service.js';
 import { StockLedger } from '../inventory/stock.js';
+import { WishlistService } from '../wishlist/service.js';
 import { buildRoutes, type RouteTable } from './routes.js';
 
 export interface App {
@@ -35,6 +36,7 @@ export function createApp(): App {
     orders: new OrderService(orders, users, systemClock),
     payments: new PaymentService(new FakeGateway(), users),
     stock: new StockLedger(products),
+    wishlist: new WishlistService(users, products, systemClock),
   });
 
   return {
