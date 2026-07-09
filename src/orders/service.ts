@@ -4,8 +4,10 @@ import { money } from '../shared/money.js';
 import type { Clock } from '../shared/clock.js';
 import type { UserRepo } from '../users/repo.js';
 import type { Cart } from '../cart/cart.js';
+import type { StockLedger } from '../inventory/stock.js';
 import { applyPromoCode } from '../pricing/calc.js';
 import { canTransition, type Order, type OrderStatus } from './model.js';
+import { reserveStockFor } from './stock-check.js';
 import type { OrderRepo } from './repo.js';
 
 export class OrderService {
@@ -15,7 +17,7 @@ export class OrderService {
     private readonly clock: Clock,
   ) {}
 
-  placeFromCart(cart: Cart, promoCode?: string): Result<Order> {
+  placeFromCart(cart: Cart, promoCode?: string, ledger?: StockLedger): Result<Order> {
     const priced = cart.priced();
     if (priced.length === 0) return err('order/empty-cart', 'nothing to order');
     if (!this.users.byId(cart.userId)) return err('order/unknown-user', cart.userId);
@@ -39,6 +41,10 @@ export class OrderService {
       status: 'placed',
       placedAt: this.clock.now(),
     };
+    if (ledger) {
+      const reserved = reserveStockFor(order, ledger);
+      if (!reserved.ok) return reserved;
+    }
     this.repo.save(order);
     return ok(order);
   }
