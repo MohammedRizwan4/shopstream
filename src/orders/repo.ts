@@ -22,4 +22,8 @@ export class InMemoryOrderRepo implements OrderRepo {
   save(order: Order): void {
     this.orders.set(order.id, order);
   }
+
+  count(): number {
+    return this.orders.size;
+  }
 }

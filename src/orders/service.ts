@@ -1,56 +1,33 @@
-import { err, ok, type Result } from '../shared/result.js';
-import { nextId } from '../shared/ids.js';
-import { money } from '../shared/money.js';
+import type { Result } from '../shared/result.js';
 import type { Clock } from '../shared/clock.js';
 import type { UserRepo } from '../users/repo.js';
 import type { Cart } from '../cart/cart.js';
-import { applyPromoCode } from '../pricing/calc.js';
-import { canTransition, type Order, type OrderStatus } from './model.js';
+import type { Order, OrderStatus } from './model.js';
 import type { OrderRepo } from './repo.js';
+import { OrderPlacement } from './placement.js';
+import { OrderTransitions } from './transitions.js';
+import { OrderQueries } from './queries.js';
 
+/**
+ * Facade kept for existing callers; the behaviour now lives in
+ * placement / transitions / queries.
+ */
 export class OrderService {
-  constructor(
-    private readonly repo: OrderRepo,
-    private readonly users: UserRepo,
-    private readonly clock: Clock,
-  ) {}
+  private readonly placement: OrderPlacement;
+  private readonly transitions: OrderTransitions;
+  readonly queries: OrderQueries;
+
+  constructor(repo: OrderRepo, users: UserRepo, clock: Clock) {
+    this.placement = new OrderPlacement(repo, users, clock);
+    this.transitions = new OrderTransitions(repo);
+    this.queries = new OrderQueries(repo);
+  }
 
   placeFromCart(cart: Cart, promoCode?: string): Result<Order> {
-    const priced = cart.priced();
-    if (priced.length === 0) return err('order/empty-cart', 'nothing to order');
-    if (!this.users.byId(cart.userId)) return err('order/unknown-user', cart.userId);
-
-    const subtotal = cart.subtotal();
-    const discount = promoCode
-      ? applyPromoCode(subtotal, promoCode, this.clock.now())
-      : money(0, subtotal.currency);
-
-    const order: Order = {
-      id: nextId('ord'),
-      userId: cart.userId,
-      lines: priced.map((l) => ({
-        productId: l.product.id,
-        name: l.product.name,
-        quantity: l.quantity,
-        gross: l.gross,
-      })),
-      total: { amount: subtotal.amount - discount.amount, currency: subtotal.currency },
-      discount,
-      status: 'placed',
-      placedAt: this.clock.now(),
-    };
-    this.repo.save(order);
-    return ok(order);
+    return this.placement.place(cart, promoCode);
   }
 
   transition(orderId: string, to: OrderStatus): Result<Order> {
-    const order = this.repo.byId(orderId);
-    if (!order) return err('order/not-found', orderId);
-    if (!canTransition(order.status, to)) {
-      return err('order/bad-transition', `${order.status} -> ${to}`);
-    }
-    const updated = { ...order, status: to };
-    this.repo.save(updated);
-    return ok(updated);
+    return this.transitions.to(orderId, to);
   }
 }

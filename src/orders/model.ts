@@ -29,3 +29,6 @@ const TRANSITIONS: Record<OrderStatus, readonly OrderStatus[]> = {
 
 export const canTransition = (from: OrderStatus, to: OrderStatus): boolean =>
   TRANSITIONS[from].includes(to);
+
+export const isTerminal = (status: OrderStatus): boolean =>
+  TRANSITIONS[status].length === 0;
