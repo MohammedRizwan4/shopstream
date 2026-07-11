@@ -1,0 +1,10 @@
+{
+  "comment": "Architecture rules checked by ArchXray on every PR. Edges are 'from->to' module names.",
+  "forbidden": [
+    "payments->ui",
+    "catalog->ui",
+    "orders->ui",
+    "notifications->api"
+  ],
+  "noCycles": true
+}

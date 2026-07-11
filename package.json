@@ -1,0 +1,16 @@
+{
+  "name": "shopstream",
+  "version": "1.0.0",
+  "description": "Demo e-commerce API with ArchXray — a PR bot that posts an architecture-diff diagram when module structure changes",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "arch:diff": "node tools/arch-xray/index.js --base main --head WORKTREE --out out"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@viz-js/viz": "^3.2.4"
+  }
+}

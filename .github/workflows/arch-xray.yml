@@ -1,0 +1,94 @@
+name: ArchXray
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  arch-xray:
+    runs-on: ubuntu-latest
+    # GITHUB_TOKEN cannot push assets from fork PRs; run only for same-repo branches.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Generate architecture diff
+        id: diff
+        env:
+          TITLE: "Architecture impact — ${{ github.event.repository.name }} (${{ github.event.pull_request.base.ref }} → ${{ github.event.pull_request.head.ref }})"
+        run: |
+          node tools/arch-xray/index.js \
+            --base ${{ github.event.pull_request.base.sha }} \
+            --head ${{ github.event.pull_request.head.sha }} \
+            --out out \
+            --title "$TITLE"
+          echo "changed=$(node -p "require('./out/summary.json').changed")" >> "$GITHUB_OUTPUT"
+
+      - name: Publish diagram to assets branch
+        if: steps.diff.outputs.changed == 'true'
+        id: publish
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          BRANCH=arch-xray-assets
+          FILE="pr-${PR_NUMBER}-${HEAD_SHA:0:8}.svg"
+          git config user.name "arch-xray-bot"
+          git config user.email "arch-xray-bot@users.noreply.github.com"
+          if git fetch origin "$BRANCH" 2>/dev/null; then
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+          else
+            git checkout --orphan "$BRANCH"
+            git rm -rf --quiet . || true
+          fi
+          cp out/arch-diff.svg "$FILE"
+          git add "$FILE"
+          git commit -m "ArchXray diagram for PR #${PR_NUMBER} (${HEAD_SHA:0:8})"
+          git push origin "$BRANCH"
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Post PR comment
+        if: steps.diff.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        env:
+          ASSET_FILE: ${{ steps.publish.outputs.file }}
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- arch-xray-report -->';
+            const summaryMd = fs.readFileSync('out/summary.md', 'utf8');
+            const { title } = JSON.parse(fs.readFileSync('out/summary.json', 'utf8'));
+            const imageUrl = `https://raw.githubusercontent.com/${context.repo.owner}/${context.repo.repo}/arch-xray-assets/${process.env.ASSET_FILE}`;
+            const body = [
+              marker,
+              `## 🏗 ${title}`,
+              '',
+              `![Architecture diff](${imageUrl})`,
+              '',
+              summaryMd,
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              ...context.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find((c) => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
+            }
