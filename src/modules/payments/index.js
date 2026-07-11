@@ -1,4 +1,6 @@
-// payments — charge and refund handling. Leaf module: depends on nothing.
+// payments — charge and refund handling.
+const ui = require('../ui'); // BAD: domain module reaching into the UI layer
+
 const charges = new Map();
 let nextChargeId = 1;
 
