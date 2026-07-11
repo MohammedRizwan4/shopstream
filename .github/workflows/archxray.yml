@@ -2,6 +2,10 @@ name: ArchXray
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      pr:
+        description: 'PR number to x-ray'
+        required: true
 
 permissions:
   contents: write
@@ -17,3 +21,4 @@ jobs:
       - uses: MohammedRizwan4/arch-xray@main
         with:
           fail-on-violation: 'true'
+          pr-number: ${{ github.event.pull_request.number || inputs.pr }}
