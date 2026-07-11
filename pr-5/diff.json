@@ -1,0 +1,315 @@
+{
+  "base": "origin/main",
+  "head": "b625128d17e8a2a93052c88cce8338d441f2cec6",
+  "diff": {
+    "addedNodes": [],
+    "removedNodes": [],
+    "addedEdges": [],
+    "removedEdges": [],
+    "keptNodes": [
+      "api",
+      "auth",
+      "billing",
+      "cart",
+      "catalog",
+      "inventory",
+      "notifications",
+      "orders",
+      "payments",
+      "pricing",
+      "promotions",
+      "reviews",
+      "search",
+      "shared",
+      "shipping",
+      "ui",
+      "users"
+    ],
+    "keptEdges": [
+      {
+        "from": "api",
+        "to": "auth",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "api",
+        "to": "cart",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "api",
+        "to": "catalog",
+        "count": 3,
+        "baseCount": 3
+      },
+      {
+        "from": "api",
+        "to": "inventory",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "api",
+        "to": "orders",
+        "count": 3,
+        "baseCount": 3
+      },
+      {
+        "from": "api",
+        "to": "payments",
+        "count": 3,
+        "baseCount": 3
+      },
+      {
+        "from": "api",
+        "to": "reviews",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "api",
+        "to": "search",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "api",
+        "to": "shared",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "api",
+        "to": "users",
+        "count": 3,
+        "baseCount": 3
+      },
+      {
+        "from": "auth",
+        "to": "shared",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "auth",
+        "to": "users",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "billing",
+        "to": "orders",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "billing",
+        "to": "shared",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "cart",
+        "to": "catalog",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "cart",
+        "to": "pricing",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "cart",
+        "to": "shared",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "cart",
+        "to": "users",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "catalog",
+        "to": "shared",
+        "count": 4,
+        "baseCount": 4
+      },
+      {
+        "from": "inventory",
+        "to": "catalog",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "inventory",
+        "to": "shared",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "inventory",
+        "to": "shipping",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "notifications",
+        "to": "orders",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "notifications",
+        "to": "shared",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "notifications",
+        "to": "users",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "orders",
+        "to": "cart",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "orders",
+        "to": "pricing",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "orders",
+        "to": "shared",
+        "count": 6,
+        "baseCount": 6
+      },
+      {
+        "from": "orders",
+        "to": "users",
+        "count": 9,
+        "baseCount": 1
+      },
+      {
+        "from": "payments",
+        "to": "billing",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "payments",
+        "to": "shared",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "payments",
+        "to": "users",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "pricing",
+        "to": "catalog",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "pricing",
+        "to": "promotions",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "pricing",
+        "to": "shared",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "promotions",
+        "to": "shared",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "reviews",
+        "to": "catalog",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "reviews",
+        "to": "shared",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "reviews",
+        "to": "users",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "search",
+        "to": "catalog",
+        "count": 2,
+        "baseCount": 2
+      },
+      {
+        "from": "shipping",
+        "to": "notifications",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "shipping",
+        "to": "shared",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "ui",
+        "to": "catalog",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "ui",
+        "to": "shared",
+        "count": 1,
+        "baseCount": 1
+      },
+      {
+        "from": "users",
+        "to": "shared",
+        "count": 3,
+        "baseCount": 3
+      }
+    ],
+    "strengthenedEdges": [
+      {
+        "from": "orders",
+        "to": "users",
+        "count": 9,
+        "baseCount": 1
+      }
+    ],
+    "changed": true
+  },
+  "violations": [],
+  "cycles": [],
+  "heat": {
+    "orders": 5
+  }
+}
