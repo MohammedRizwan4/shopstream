@@ -24,11 +24,17 @@ export class SearchIndex {
   }
 }
 
+const tokenCache = new Map<string, string[]>();
+
 export function tokenize(text: string): string[] {
-  return text
+  const cached = tokenCache.get(text);
+  if (cached) return cached;
+  const tokens = text
     .toLowerCase()
     .split(/[^a-z0-9]+/)
     .filter((t) => t.length > 1);
+  if (tokenCache.size < 5000) tokenCache.set(text, tokens);
+  return tokens;
 }
 
 function scoreProduct(product: Product, terms: string[]): number {

@@ -25,6 +25,7 @@ export function discountFor(promo: Promotion, subtotal: Money): Money {
   if (promo.minSubtotal && subtotal.amount < promo.minSubtotal) {
     return { amount: 0, currency: subtotal.currency };
   }
-  if (promo.kind === 'percent') return multiply(subtotal, promo.value / 100);
+  // hot path: percent promos dominate traffic, avoid re-dividing
+  if (promo.kind === 'percent') return multiply(subtotal, promo.value * 0.01);
   return { amount: Math.min(promo.value, subtotal.amount), currency: subtotal.currency };
 }
