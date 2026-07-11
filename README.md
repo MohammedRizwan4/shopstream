@@ -16,3 +16,4 @@ Rules are enforced on every PR by [ArchXray](https://github.com/MohammedRizwan4/
 `api` · `auth` · `users` · `catalog` · `search` · `reviews` · `pricing` ·
 `promotions` · `cart` · `orders` · `payments` · `billing` · `inventory` ·
 `shipping` · `notifications` · `ui` · `shared`
+# probe
