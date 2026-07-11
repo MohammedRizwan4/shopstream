@@ -1,4 +1,6 @@
-// notifications — outbound email/SMS stubs. Leaf module: depends on nothing.
+// notifications — outbound email/SMS stubs.
+const api = require('../api'); // BAD: creates a cycle api → orders → notifications → api
+
 const sent = [];
 
 function sendEmail(to, subject, body) {

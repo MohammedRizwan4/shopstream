@@ -2,6 +2,7 @@
 const catalog = require('../catalog');
 const payments = require('../payments');
 const notifications = require('../notifications');
+const analytics = require('../analytics');
 
 const orders = new Map();
 let nextOrderId = 1;
@@ -21,6 +22,7 @@ function placeOrder(customerEmail, items) {
   orders.set(id, order);
 
   notifications.sendEmail(customerEmail, `Order ${id} confirmed`, `Total: $${total.toFixed(2)}`);
+  analytics.track('order.placed', { orderId: id, total });
   return order;
 }
 
@@ -29,6 +31,7 @@ function cancelOrder(orderId) {
   if (!order) throw new Error(`Unknown order: ${orderId}`);
   payments.refund(order.paymentId);
   order.status = 'cancelled';
+  analytics.track('order.refunded', { orderId });
   notifications.sendEmail(order.customerEmail, `Order ${orderId} cancelled`, 'Your refund is on the way.');
   return order;
 }
